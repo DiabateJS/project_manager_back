@@ -5,37 +5,51 @@ import models.Project;
 import models.Task;
 
 import javax.ejb.Stateless;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Stateless
 public class ProjectService {
-    public static List<Project> getAllProjects(){
+    private static String DRIVER = "com.mysql.cj.jdbc.Driver";
+    private static String SELECT_PROJECTS_QUERY = "select * from projet";
+    private static String URL_DATABASE = "jdbc:mysql://localhost/project_manager?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
+    private static String USERNAME = "root";
+    private static String PASSWORD = "";
+
+    public static List<Project> getAllProjects()  {
         List<Project> projects = new ArrayList<Project>();
         Project project = new Project();
-        project.setId(1);
-        project.setLibelle("Gestion de Projets");
-        project.setDescription("Application de gestion de projets");
-        List<Task> tasks = new ArrayList<Task>();
-        Task task1 = new Task(1,"Creation du dépôt du projet sous GitHub.",1,"Creer le repository sous GitHub", EtatEnum.A_FAIRE);
-        tasks.add(task1);
-        Task task2 = new Task(2,"Intégrer le template au projet.",1,"Template Angular Admin 9",EtatEnum.A_FAIRE);
-        tasks.add(task2);
-        Task task3 = new Task(2,"Créer la structure de données permanente en Json.",1,"Structure de données provisoire.",EtatEnum.A_FAIRE);
-        tasks.add(task3);
-        project.setTasks(tasks);
-        project.setEtat(EtatEnum.EN_COURS);
-        projects.add(project);
+        Connection con = null;
+        try{
+            Class.forName(DRIVER);
+            con = DriverManager.getConnection(URL_DATABASE,USERNAME,PASSWORD);
+            Statement stmt = con.createStatement();
+            ResultSet rs=stmt.executeQuery(SELECT_PROJECTS_QUERY);
+            while(rs.next()) {
+                project = new Project();
+                project.setId(rs.getInt(1));
+                project.setLibelle(rs.getString(2));
+                project.setEtat(EtatEnum.valueOf(rs.getString(3)));
+                project.setDescription(rs.getString(4));
+                List<Task> tasks = new ArrayList<Task>();
+                Task task1 = new Task(1,"Creation du dépôt du projet sous GitHub.",1,"Creer le repository sous GitHub", EtatEnum.A_FAIRE);
+                tasks.add(task1);
+                project.setTasks(tasks);
+                projects.add(project);
+            }
+            con.close();
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        finally {
+            try{
+                con.close();
+            }catch(SQLException se){
+                se.getStackTrace();
+            }
+        }
 
-        Project project2 = new Project();
-        project2.setId(2);
-        project2.setLibelle("Plateforme de transaction monétaire");
-        project2.setDescription("Application de gestion des transactions en ligne via mobile money, crypto monaie ou banque");
-        List<Task> tasks2 = new ArrayList<Task>();
-        project2.setTasks(tasks2);
-        project2.setEtat(EtatEnum.A_FAIRE);
-
-        projects.add(project2);
         return projects;
     }
 
