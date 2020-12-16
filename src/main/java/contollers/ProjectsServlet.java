@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name="projectServlet", urlPatterns = "/projects")
+@WebServlet(name="projectsServlet", urlPatterns = "/projects")
 public class ProjectsServlet extends HttpServlet {
 
     @Override
