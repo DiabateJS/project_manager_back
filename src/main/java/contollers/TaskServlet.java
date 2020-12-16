@@ -15,6 +15,7 @@ import java.io.IOException;
 public class TaskServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setHeader("Access-Control-Allow-Origin","*");
         int idProject = Integer.parseInt(req.getParameter("idProject"));
         int idTask = Integer.parseInt(req.getParameter("idTask"));
         Task task = TaskService.getProjectTask(idProject, idTask);

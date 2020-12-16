@@ -18,6 +18,7 @@ import java.util.List;
 public class TasksServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setHeader("Access-Control-Allow-Origin","*");
         resp.setContentType("application/json");
         int idProject = Integer.parseInt(req.getParameter("id"));
         List<Task> tasks = TaskService.getProjectTasks(idProject);
