@@ -3,6 +3,7 @@ package contollers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import models.Project;
 import services.ProjectService;
+import utils.Helper;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -18,7 +19,7 @@ public class ProjectsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setHeader("Access-Control-Allow-Origin","*");
+        Helper.fixHeaders(resp);
         resp.setContentType("application/json");
         List<Project> projects = ProjectService.getAllProjects();
         ObjectMapper mapper = new ObjectMapper();

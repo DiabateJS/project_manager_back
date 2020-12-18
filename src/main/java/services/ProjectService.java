@@ -2,9 +2,11 @@ package services;
 
 import models.EtatEnum;
 import models.Project;
+import models.Resultat;
 import models.Task;
 
 import javax.ejb.Stateless;
+import javax.servlet.http.HttpServletRequest;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,5 +61,150 @@ public class ProjectService {
             }
         }
         return project;
+    }
+
+    public static Resultat createProject(HttpServletRequest request){
+        Resultat res = new Resultat();
+        String libelle = request.getParameter("libelle");
+        String description = request.getParameter("description");
+        String etat = request.getParameter("etat");
+        String sql = Constants.INSERT_PROJECT_QUERY+ "('"+libelle+"','"+etat+"','"+description+"')";
+        Connection con = null;
+        try{
+            Class.forName(Constants.DRIVER);
+            con = DriverManager.getConnection(Constants.URL_DATABASE,Constants.USERNAME,Constants.PASSWORD);
+            Statement stmt = con.createStatement();
+            stmt.execute(sql);
+            con.close();
+            res.setCode(Constants.SUCCES_CODE);
+            res.setMessage("Ajout effectué avec succès en base");
+        }catch(Exception e){
+            e.printStackTrace();
+            res.setMessage(e.getMessage());
+            res.setCode(Constants.ERROR_CODE);
+        }
+        finally {
+            try{
+                con.close();
+            }catch(SQLException se){
+                se.getStackTrace();
+                res.setMessage(se.getMessage());
+                res.setCode(Constants.ERROR_CODE);
+            }
+        }
+
+        return res;
+    }
+
+    private static Resultat deleteProjectTasks(int id){
+        Resultat res = new Resultat();
+        Connection con = null;
+        //1- Suppression des taches du projet
+        String sql = Constants.DELETE_PROJECT_TASK_QUERY + id;
+        try {
+            Class.forName(Constants.DRIVER);
+            con = DriverManager.getConnection(Constants.URL_DATABASE,Constants.USERNAME,Constants.PASSWORD);
+            Statement stmt = con.createStatement();
+            stmt.execute(sql);
+            con.close();
+            res.setCode(Constants.SUCCES_CODE);
+            res.setMessage("Taches du projet supprimées avec succes.");
+        }catch(Exception e){
+            e.printStackTrace();
+            res.setMessage(res.getMessage() + e.getMessage());
+            res.setCode(Constants.ERROR_CODE);
+        }
+        finally {
+            try{
+                con.close();
+            }catch(SQLException se){
+                se.getStackTrace();
+                res.setMessage(se.getMessage());
+                res.setCode(Constants.ERROR_CODE);
+            }
+        }
+        return res;
+    }
+
+    private static Resultat deleteProjectOnly(int id){
+        Resultat res = new Resultat();
+        String sql = Constants.DELETE_PROJECT_QUERY + id;
+        Connection con = null;
+        try {
+            Class.forName(Constants.DRIVER);
+            con = DriverManager.getConnection(Constants.URL_DATABASE,Constants.USERNAME,Constants.PASSWORD);
+            Statement stmt = con.createStatement();
+            stmt.execute(sql);
+            con.close();
+            res.setCode(Constants.SUCCES_CODE);
+            res.setMessage("Projet supprimés avec succes.");
+        }catch(Exception e){
+            e.printStackTrace();
+            res.setMessage(e.getMessage());
+            res.setCode(Constants.ERROR_CODE);
+        }
+        finally {
+            try{
+                con.close();
+            }catch(SQLException se){
+                se.getStackTrace();
+                res.setMessage(se.getMessage());
+                res.setCode(Constants.ERROR_CODE);
+            }
+        }
+        return res;
+    }
+
+    public static Resultat deleteProject(HttpServletRequest request){
+        Resultat resDeleteTasks = new Resultat();
+        Resultat resDeleteProject = new Resultat();
+        Resultat res = new Resultat();
+        int id = Integer.parseInt(request.getParameter("id"));
+        //1. Suppression des taches du projet
+        resDeleteTasks = deleteProjectTasks(id);
+        if (resDeleteTasks.getCode().equals(Constants.SUCCES_CODE)){
+            //2- Suppression du projet
+            resDeleteProject = deleteProjectOnly(id);
+            res.setCode(Constants.SUCCES_CODE);
+            res.setMessage("1-"+resDeleteTasks.getMessage() + "2-" + resDeleteProject.getMessage());
+        }else{
+            res.setCode(Constants.ERROR_CODE);
+            res.setMessage(resDeleteTasks.getMessage());
+        }
+        return res;
+    }
+
+    public static Resultat updateProject(HttpServletRequest request){
+        Resultat res = new Resultat();
+        int id = Integer.parseInt(request.getParameter("id"));
+        String libelle = request.getParameter("libelle");
+        String etat = request.getParameter("etat");
+        String description = request.getParameter("description");
+        String sql = Constants.UPDATE_PROJECT_QUERY+ "libelle = '"+libelle+"' , etat = '"+etat+"' , description = '"+description+"' ";
+        sql += " where id = "+id;
+        Connection con = null;
+        try {
+            Class.forName(Constants.DRIVER);
+            con = DriverManager.getConnection(Constants.URL_DATABASE,Constants.USERNAME,Constants.PASSWORD);
+            Statement stmt = con.createStatement();
+            stmt.execute(sql);
+            con.close();
+            res.setCode(Constants.SUCCES_CODE);
+            res.setMessage("Projet mis à jour avec succès.");
+        }catch(Exception e){
+            e.printStackTrace();
+            res.setMessage(e.getMessage());
+            res.setCode(Constants.ERROR_CODE);
+        }
+        finally {
+            try{
+                con.close();
+            }catch(SQLException se){
+                se.getStackTrace();
+                res.setMessage(se.getMessage());
+                res.setCode(Constants.ERROR_CODE);
+            }
+        }
+        return res;
     }
 }
