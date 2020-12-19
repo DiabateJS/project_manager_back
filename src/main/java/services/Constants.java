@@ -6,12 +6,19 @@ public class Constants {
     public static String USERNAME = "root";
     public static String PASSWORD = "";
 
+    //SQL GESTION PROJET
     public static String SELECT_PROJECTS_QUERY = "select * from projet";
     public static String SELECT_PROJECTS_TASK_QUERY = "select * from tache where idprojet = ";
     public static String INSERT_PROJECT_QUERY = "insert into projet(libelle, etat, description) values ";
     public static String DELETE_PROJECT_TASK_QUERY = "delete from tache where idProjet = ";
     public static String DELETE_PROJECT_QUERY = "delete from projet where id = ";
     public static String UPDATE_PROJECT_QUERY = "update projet set ";
+
+    //SQL GESTION TACHE
+    public static String INSERT_PROJECT_TASK_QUERY = "insert into tache(libelle, estimation, description, etat, idProjet) values ";
+    public static String DELETE_TASK_QUERY = "delete from tache where idProjet = ";
+    public static String UPDATE_TASK_QUERY = "update tache set  ";
+
 
     public static String SUCCES_CODE = "SUCCES";
     public static String ERROR_CODE = "ERROR";

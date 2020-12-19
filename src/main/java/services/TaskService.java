@@ -1,8 +1,10 @@
 package services;
 
 import models.EtatEnum;
+import models.Resultat;
 import models.Task;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,5 +52,107 @@ public class TaskService {
             }
         }
         return task;
+    }
+
+    public static Resultat createTask(HttpServletRequest req){
+        Resultat res = new Resultat();
+        int idProjet = Integer.parseInt(req.getParameter("idProjet"));
+        String libelle = req.getParameter("libelle");
+        String etat = req.getParameter("etat");
+        int estimation = Integer.parseInt(req.getParameter("estimation"));
+        String description = req.getParameter("description");
+        String sql = Constants.INSERT_PROJECT_TASK_QUERY + "('"+libelle+"',"+estimation+",'"+description+"','"+etat+"',"+idProjet+")";
+        Connection con = null;
+        try{
+            Class.forName(Constants.DRIVER);
+            con = DriverManager.getConnection(Constants.URL_DATABASE,Constants.USERNAME,Constants.PASSWORD);
+            Statement stmt = con.createStatement();
+            stmt.execute(sql);
+            con.close();
+            res.setCode(Constants.SUCCES_CODE);
+            res.setMessage("Ajout effectué avec succès en base");
+        }catch(Exception e){
+            e.printStackTrace();
+            res.setMessage(e.getMessage());
+            res.setCode(Constants.ERROR_CODE);
+        }
+        finally {
+            try{
+                con.close();
+            }catch(SQLException se){
+                se.getStackTrace();
+                res.setMessage(se.getMessage());
+                res.setCode(Constants.ERROR_CODE);
+            }
+        }
+
+        return res;
+    }
+
+    public static Resultat updateTask(HttpServletRequest req){
+        Resultat res = new Resultat();
+        int idProjet = Integer.parseInt(req.getParameter("idProjet"));
+        int id = Integer.parseInt(req.getParameter("id"));
+        String libelle = req.getParameter("libelle");
+        String etat = req.getParameter("etat");
+        int estimation = Integer.parseInt(req.getParameter("estimation"));
+        String description = req.getParameter("description");
+        String sql = Constants.UPDATE_TASK_QUERY+ "libelle = '"+libelle+"' ,estimation = "+estimation+", etat = '"+etat+"' , description = '"+description+"' ";
+        sql += " where id = "+id+" and idProjet = "+idProjet;
+        Connection con = null;
+        try{
+            Class.forName(Constants.DRIVER);
+            con = DriverManager.getConnection(Constants.URL_DATABASE,Constants.USERNAME,Constants.PASSWORD);
+            Statement stmt = con.createStatement();
+            stmt.execute(sql);
+            con.close();
+            res.setCode(Constants.SUCCES_CODE);
+            res.setMessage("Mise à jour effectué avec succès en base");
+        }catch(Exception e){
+            e.printStackTrace();
+            res.setMessage(e.getMessage());
+            res.setCode(Constants.ERROR_CODE);
+        }
+        finally {
+            try{
+                con.close();
+            }catch(SQLException se){
+                se.getStackTrace();
+                res.setMessage(se.getMessage());
+                res.setCode(Constants.ERROR_CODE);
+            }
+        }
+        return res;
+    }
+
+    public static Resultat deleteTask(HttpServletRequest req){
+        Resultat res = new Resultat();
+        int idProjet =  Integer.parseInt(req.getParameter("idProjet"));
+        int idTask = Integer.parseInt(req.getParameter("id"));
+        String sql = Constants.DELETE_TASK_QUERY+ idProjet + " and id = "+idTask;
+        Connection con = null;
+        try{
+            Class.forName(Constants.DRIVER);
+            con = DriverManager.getConnection(Constants.URL_DATABASE,Constants.USERNAME,Constants.PASSWORD);
+            Statement stmt = con.createStatement();
+            stmt.execute(sql);
+            con.close();
+            res.setCode(Constants.SUCCES_CODE);
+            res.setMessage("Mise à jour effectué avec succès en base");
+        }catch(Exception e){
+            e.printStackTrace();
+            res.setMessage(e.getMessage());
+            res.setCode(Constants.ERROR_CODE);
+        }
+        finally {
+            try{
+                con.close();
+            }catch(SQLException se){
+                se.getStackTrace();
+                res.setMessage(se.getMessage());
+                res.setCode(Constants.ERROR_CODE);
+            }
+        }
+        return res;
     }
 }
