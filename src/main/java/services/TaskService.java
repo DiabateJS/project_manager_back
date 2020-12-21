@@ -17,9 +17,9 @@ public class TaskService {
         try{
             Class.forName(Constants.DRIVER);
             con = DriverManager.getConnection(Constants.URL_DATABASE,Constants.USERNAME,Constants.PASSWORD);
-            Statement stmt = con.createStatement();
-            String sql = Constants.SELECT_PROJECTS_TASK_QUERY+idProject;
-            ResultSet rs=stmt.executeQuery(sql);
+            PreparedStatement preparedStmt = con.prepareStatement(Constants.SELECT_PROJECTS_TASK_QUERY);
+            preparedStmt.setInt(1,idProject);
+            ResultSet rs = preparedStmt.executeQuery();
             while(rs.next()) {
                 task = new Task();
                 task.setId(rs.getInt(1));
@@ -61,13 +61,17 @@ public class TaskService {
         String etat = req.getParameter("etat");
         int estimation = Integer.parseInt(req.getParameter("estimation"));
         String description = req.getParameter("description");
-        String sql = Constants.INSERT_PROJECT_TASK_QUERY + "('"+libelle+"',"+estimation+",'"+description+"','"+etat+"',"+idProjet+")";
         Connection con = null;
         try{
             Class.forName(Constants.DRIVER);
             con = DriverManager.getConnection(Constants.URL_DATABASE,Constants.USERNAME,Constants.PASSWORD);
-            Statement stmt = con.createStatement();
-            stmt.execute(sql);
+            PreparedStatement preparedStmt = con.prepareStatement(Constants.INSERT_PROJECT_TASK_QUERY);
+            preparedStmt.setString(1, libelle);
+            preparedStmt.setInt(2, estimation);
+            preparedStmt.setString(3, description);
+            preparedStmt.setString(4, etat);
+            preparedStmt.setInt(5, idProjet);
+            preparedStmt.execute();
             con.close();
             res.setCode(Constants.SUCCES_CODE);
             res.setMessage("Ajout effectué avec succès en base");
@@ -97,14 +101,18 @@ public class TaskService {
         String etat = req.getParameter("etat");
         int estimation = Integer.parseInt(req.getParameter("estimation"));
         String description = req.getParameter("description");
-        String sql = Constants.UPDATE_TASK_QUERY+ "libelle = '"+libelle+"' ,estimation = "+estimation+", etat = '"+etat+"' , description = '"+description+"' ";
-        sql += " where id = "+id+" and idProjet = "+idProjet;
         Connection con = null;
         try{
             Class.forName(Constants.DRIVER);
             con = DriverManager.getConnection(Constants.URL_DATABASE,Constants.USERNAME,Constants.PASSWORD);
-            Statement stmt = con.createStatement();
-            stmt.execute(sql);
+            PreparedStatement preparedStmt = con.prepareStatement(Constants.UPDATE_TASK_QUERY);
+            preparedStmt.setString(1, libelle);
+            preparedStmt.setInt(2, estimation);
+            preparedStmt.setString(3, etat);
+            preparedStmt.setString(4, description);
+            preparedStmt.setInt(5, id);
+            preparedStmt.setInt(6, idProjet);
+            preparedStmt.execute();
             con.close();
             res.setCode(Constants.SUCCES_CODE);
             res.setMessage("Mise à jour effectué avec succès en base");
@@ -129,13 +137,14 @@ public class TaskService {
         Resultat res = new Resultat();
         int idProjet =  Integer.parseInt(req.getParameter("idProjet"));
         int idTask = Integer.parseInt(req.getParameter("id"));
-        String sql = Constants.DELETE_TASK_QUERY+ idProjet + " and id = "+idTask;
         Connection con = null;
         try{
             Class.forName(Constants.DRIVER);
             con = DriverManager.getConnection(Constants.URL_DATABASE,Constants.USERNAME,Constants.PASSWORD);
-            Statement stmt = con.createStatement();
-            stmt.execute(sql);
+            PreparedStatement preparedStmt = con.prepareStatement(Constants.DELETE_TASK_QUERY);
+            preparedStmt.setInt(1, idProjet);
+            preparedStmt.setInt(2, idTask);
+            preparedStmt.execute();
             con.close();
             res.setCode(Constants.SUCCES_CODE);
             res.setMessage("Mise à jour effectué avec succès en base");

@@ -5,6 +5,7 @@ import models.Project;
 import models.Task;
 import services.ProjectService;
 import services.TaskService;
+import utils.Helper;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,7 +19,7 @@ import java.util.List;
 public class TasksServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setHeader("Access-Control-Allow-Origin","*");
+        Helper.fixHeaders(resp);
         resp.setContentType("application/json");
         int idProject = Integer.parseInt(req.getParameter("id"));
         List<Task> tasks = TaskService.getProjectTasks(idProject);

@@ -68,13 +68,15 @@ public class ProjectService {
         String libelle = request.getParameter("libelle");
         String description = request.getParameter("description");
         String etat = request.getParameter("etat");
-        String sql = Constants.INSERT_PROJECT_QUERY+ "('"+libelle+"','"+etat+"','"+description+"')";
         Connection con = null;
         try{
             Class.forName(Constants.DRIVER);
             con = DriverManager.getConnection(Constants.URL_DATABASE,Constants.USERNAME,Constants.PASSWORD);
-            Statement stmt = con.createStatement();
-            stmt.execute(sql);
+            PreparedStatement preparedStm = con.prepareStatement(Constants.INSERT_PROJECT_QUERY);
+            preparedStm.setString(1,libelle);
+            preparedStm.setString(2,etat);
+            preparedStm.setString(3,description);
+            preparedStm.execute();
             con.close();
             res.setCode(Constants.SUCCES_CODE);
             res.setMessage("Ajout effectué avec succès en base");
@@ -100,12 +102,12 @@ public class ProjectService {
         Resultat res = new Resultat();
         Connection con = null;
         //1- Suppression des taches du projet
-        String sql = Constants.DELETE_PROJECT_TASK_QUERY + id;
         try {
             Class.forName(Constants.DRIVER);
             con = DriverManager.getConnection(Constants.URL_DATABASE,Constants.USERNAME,Constants.PASSWORD);
-            Statement stmt = con.createStatement();
-            stmt.execute(sql);
+            PreparedStatement preparedStmt = con.prepareStatement(Constants.DELETE_PROJECT_TASK_QUERY);
+            preparedStmt.setInt(1, id);
+            preparedStmt.execute();
             con.close();
             res.setCode(Constants.SUCCES_CODE);
             res.setMessage("Taches du projet supprimées avec succes.");
@@ -128,13 +130,13 @@ public class ProjectService {
 
     private static Resultat deleteProjectOnly(int id){
         Resultat res = new Resultat();
-        String sql = Constants.DELETE_PROJECT_QUERY + id;
         Connection con = null;
         try {
             Class.forName(Constants.DRIVER);
             con = DriverManager.getConnection(Constants.URL_DATABASE,Constants.USERNAME,Constants.PASSWORD);
-            Statement stmt = con.createStatement();
-            stmt.execute(sql);
+            PreparedStatement preparedStmt = con.prepareStatement(Constants.DELETE_PROJECT_QUERY);
+            preparedStmt.setInt(1, id);
+            preparedStmt.execute();
             con.close();
             res.setCode(Constants.SUCCES_CODE);
             res.setMessage("Projet supprimés avec succes.");
@@ -180,14 +182,16 @@ public class ProjectService {
         String libelle = request.getParameter("libelle");
         String etat = request.getParameter("etat");
         String description = request.getParameter("description");
-        String sql = Constants.UPDATE_PROJECT_QUERY+ "libelle = '"+libelle+"' , etat = '"+etat+"' , description = '"+description+"' ";
-        sql += " where id = "+id;
         Connection con = null;
         try {
             Class.forName(Constants.DRIVER);
             con = DriverManager.getConnection(Constants.URL_DATABASE,Constants.USERNAME,Constants.PASSWORD);
-            Statement stmt = con.createStatement();
-            stmt.execute(sql);
+            PreparedStatement preparedStmt = con.prepareStatement(Constants.UPDATE_PROJECT_QUERY);
+            preparedStmt.setString(1, libelle);
+            preparedStmt.setString(2, etat);
+            preparedStmt.setString(3, description);
+            preparedStmt.setInt(4, id);
+            preparedStmt.execute();
             con.close();
             res.setCode(Constants.SUCCES_CODE);
             res.setMessage("Projet mis à jour avec succès.");
