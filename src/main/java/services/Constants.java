@@ -19,6 +19,10 @@ public class Constants {
     public static String DELETE_TASK_QUERY = "delete from tache where idProjet = ? and id = ?";
     public static String UPDATE_TASK_QUERY = "update tache set  libelle = ? ,estimation = ?, etat = ? , description = ? where id = ? and idProjet = ?";
 
+    public static String SELECT_USERS_QUERY = "select * from users";
+    public static String INSERT_USER_QUERY = "insert into users(fullname, login, password, email, profile) values (?, ?, ?, ?, ?)";
+    public static String DELETE_USER_QUERY = "delete from users where id = ?";
+    public static String UPDATE_USER_QUERY = "update users set  fullname = ? ,login = ?, password = ? , email = ?, profile = ?  where id = ? ";
 
     public static String SUCCES_CODE = "SUCCES";
     public static String ERROR_CODE = "ERROR";
