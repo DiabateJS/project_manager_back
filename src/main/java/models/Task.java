@@ -6,16 +6,18 @@ public class Task {
     private int estimation;
     private String description;
     private EtatEnum etat;
+    private String user;
 
     public Task() {
     }
 
-    public Task(int id, String libelle, int estimation, String description, EtatEnum etat) {
+    public Task(int id, String libelle, int estimation, String description, EtatEnum etat, String user) {
         Id = id;
         this.libelle = libelle;
         this.estimation = estimation;
         this.description = description;
         this.etat = etat;
+        this.user = user;
     }
 
     public int getId() {
@@ -58,6 +60,14 @@ public class Task {
         this.etat = etat;
     }
 
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
@@ -66,6 +76,7 @@ public class Task {
                 ", estimation=" + estimation +
                 ", description='" + description + '\'' +
                 ", etat=" + etat +
+                ", user='" + user + '\'' +
                 '}';
     }
 }

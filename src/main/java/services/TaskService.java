@@ -27,6 +27,7 @@ public class TaskService {
                 task.setEstimation(rs.getInt(3));
                 task.setDescription(rs.getString(4));
                 task.setEtat(EtatEnum.valueOf(rs.getString(5)));
+                task.setUser(rs.getString(6));
                 tasks.add(task);
             }
             con.close();
@@ -60,6 +61,7 @@ public class TaskService {
         String libelle = req.getParameter("libelle");
         String etat = req.getParameter("etat");
         int estimation = Integer.parseInt(req.getParameter("estimation"));
+        String user = req.getParameter("user");
         String description = req.getParameter("description");
         Connection con = null;
         try{
@@ -71,6 +73,7 @@ public class TaskService {
             preparedStmt.setString(3, description);
             preparedStmt.setString(4, etat);
             preparedStmt.setInt(5, idProjet);
+            preparedStmt.setString(6, user);
             preparedStmt.execute();
             con.close();
             res.setCode(Constants.SUCCES_CODE);
@@ -100,6 +103,7 @@ public class TaskService {
         String libelle = req.getParameter("libelle");
         String etat = req.getParameter("etat");
         int estimation = Integer.parseInt(req.getParameter("estimation"));
+        String user = req.getParameter("user");
         String description = req.getParameter("description");
         Connection con = null;
         try{
@@ -110,8 +114,9 @@ public class TaskService {
             preparedStmt.setInt(2, estimation);
             preparedStmt.setString(3, etat);
             preparedStmt.setString(4, description);
-            preparedStmt.setInt(5, id);
-            preparedStmt.setInt(6, idProjet);
+            preparedStmt.setString(5, user);
+            preparedStmt.setInt(6, id);
+            preparedStmt.setInt(7, idProjet);
             preparedStmt.execute();
             con.close();
             res.setCode(Constants.SUCCES_CODE);
