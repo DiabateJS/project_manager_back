@@ -36,7 +36,9 @@ public class TaskService {
         }
         finally {
             try{
-                con.close();
+                if (con != null){
+                    con.close();
+                }
             }catch(SQLException se){
                 se.getStackTrace();
             }
@@ -85,7 +87,9 @@ public class TaskService {
         }
         finally {
             try{
-                con.close();
+                if (con != null){
+                    con.close();
+                }
             }catch(SQLException se){
                 se.getStackTrace();
                 res.setMessage(se.getMessage());
@@ -128,7 +132,9 @@ public class TaskService {
         }
         finally {
             try{
-                con.close();
+                if (con != null){
+                    con.close();
+                }
             }catch(SQLException se){
                 se.getStackTrace();
                 res.setMessage(se.getMessage());
@@ -160,7 +166,9 @@ public class TaskService {
         }
         finally {
             try{
-                con.close();
+                if (con != null){
+                    con.close();
+                }
             }catch(SQLException se){
                 se.getStackTrace();
                 res.setMessage(se.getMessage());

@@ -33,7 +33,9 @@ public class UserService {
         }
         finally {
             try{
-                con.close();
+                if (con != null){
+                    con.close();
+                }
             }catch(SQLException se){
                 se.getStackTrace();
             }
@@ -81,7 +83,9 @@ public class UserService {
         }
         finally {
             try{
-                con.close();
+                if (con != null){
+                    con.close();
+                }
             }catch(SQLException se){
                 se.getStackTrace();
                 res.setMessage(se.getMessage());
@@ -112,7 +116,9 @@ public class UserService {
         }
         finally {
             try{
-                con.close();
+                if (con != null){
+                    con.close();
+                }
             }catch(SQLException se){
                 se.getStackTrace();
                 res.setMessage(se.getMessage());
@@ -152,7 +158,9 @@ public class UserService {
         }
         finally {
             try{
-                con.close();
+                if (con != null){
+                    con.close();
+                }
             }catch(SQLException se){
                 se.getStackTrace();
                 res.setMessage(se.getMessage());
