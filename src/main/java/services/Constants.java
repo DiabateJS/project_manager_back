@@ -15,10 +15,11 @@ public class Constants {
     public static String UPDATE_PROJECT_QUERY = "update projet set libelle = ? , etat = ? , description = ? where id = ?";
 
     //SQL GESTION TACHE
-    public static String INSERT_PROJECT_TASK_QUERY = "insert into tache (libelle, estimation, description, etat, idProjet, idUser) values (?, ?, ?, ?, ?, select id from users where fullname = ?)";
+    public static String INSERT_PROJECT_TASK_QUERY = "insert into tache (libelle, estimation, description, etat, idProjet, idUser) values (?, ?, ?, ?, ?, (select id from users where fullname = ?))";
     public static String DELETE_TASK_QUERY = "delete from tache where idProjet = ? and id = ?";
     public static String UPDATE_TASK_QUERY = "update tache set  libelle = ? ,estimation = ?, etat = ? , description = ? , idUser = (select id from users where fullname = ? ) where id = ? and idProjet = ?";
 
+    public static String AUTH_USERS_QUERY = "select * from users where login = ? and password = ?";
     public static String SELECT_USERS_QUERY = "select * from users";
     public static String INSERT_USER_QUERY = "insert into users(fullname, login, password, email, profile) values (?, ?, ?, ?, ?)";
     public static String DELETE_USER_QUERY = "delete from users where id = ?";

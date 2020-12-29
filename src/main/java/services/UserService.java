@@ -8,6 +8,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserService {
+
+    public static Resultat isAuth(HttpServletRequest request){
+        Resultat res = new Resultat();
+        String login = request.getParameter("login");
+        String password = request.getParameter("password");
+        Connection con = null;
+        try{
+            Class.forName(Constants.DRIVER);
+            con = DriverManager.getConnection(Constants.URL_DATABASE,Constants.USERNAME,Constants.PASSWORD);
+            PreparedStatement preparedStm = con.prepareStatement(Constants.AUTH_USERS_QUERY);
+            preparedStm.setString(1, login);
+            preparedStm.setString(2, password);
+            ResultSet rs = preparedStm.executeQuery();
+            if (rs.next()){
+                res.setCode(Constants.SUCCES_CODE);
+                res.setMessage(rs.getString(2));
+            }else {
+                res.setCode(Constants.ERROR_CODE);
+                res.setMessage("Echec Authentification");
+            }
+            con.close();
+        }catch(Exception e){
+            res.setMessage(e.getMessage());
+            res.setCode(Constants.ERROR_CODE);
+        }
+        finally {
+            try{
+                if (con != null){
+                    con.close();
+                }
+            }catch(SQLException se){
+                se.getStackTrace();
+            }
+        }
+        return res;
+    }
+
     public static List<User> getAllUsers()  {
         List<User> users = new ArrayList<User>();
         User user = null;
