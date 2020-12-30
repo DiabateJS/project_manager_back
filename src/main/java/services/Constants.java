@@ -15,9 +15,9 @@ public class Constants {
     public static String UPDATE_PROJECT_QUERY = "update pm_projet set libelle = ? , etat = ? , description = ? where id = ?";
 
     //SQL GESTION TACHE
-    public static String INSERT_PROJECT_TASK_QUERY = "insert into pm_tache (libelle, estimation, description, etat, idProjet, idUser) values (?, ?, ?, ?, ?, (select id from users where fullname = ?))";
+    public static String INSERT_PROJECT_TASK_QUERY = "insert into pm_tache (libelle, estimation, description, etat, idProjet, idUser) values (?, ?, ?, ?, ?, (select id from pm_users where fullname = ?))";
     public static String DELETE_TASK_QUERY = "delete from pm_tache where idProjet = ? and id = ?";
-    public static String UPDATE_TASK_QUERY = "update pm_tache set  libelle = ? ,estimation = ?, etat = ? , description = ? , idUser = (select id from users where fullname = ? ) where id = ? and idProjet = ?";
+    public static String UPDATE_TASK_QUERY = "update pm_tache set  libelle = ? ,estimation = ?, etat = ? , description = ? , idUser = (select id from pm_users where fullname = ? ) where id = ? and idProjet = ?";
 
     public static String AUTH_USERS_QUERY = "select * from pm_users where login = ? and password = ?";
     public static String SELECT_USERS_QUERY = "select * from pm_users";
